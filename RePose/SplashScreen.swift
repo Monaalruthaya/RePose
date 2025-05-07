@@ -38,16 +38,16 @@ struct SplashScreenView: View {
 struct OnboardingContainerView: View {
     @AppStorage("hasLaunchedBefore") private var hasLaunchedBefore = false
     @State private var currentIndex = 0
-
+    
     init() {
         // Customize the dots
         UIPageControl.appearance().currentPageIndicatorTintColor = UIColor.purple
         UIPageControl.appearance().pageIndicatorTintColor = UIColor.systemGray4
     }
-
+    
     var body: some View {
         if hasLaunchedBefore {
-            Text("Main App Goes Here")
+            ContentView() // هنا ربطنا ContentView
         } else {
             ZStack {
                 TabView(selection: $currentIndex) {
@@ -58,7 +58,7 @@ struct OnboardingContainerView: View {
                     }.tag(2)
                 }
                 .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
-
+                
                 VStack {
                     HStack {
                         Spacer()
