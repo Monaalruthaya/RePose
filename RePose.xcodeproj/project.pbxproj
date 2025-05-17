@@ -24,18 +24,18 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		F465FBCF2DC7A9AD00247ED5 /* RePose.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RePose.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F465FBCF2DC7A9AD00247ED5 /* PosePal.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PosePal.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F465FBDF2DC7A9AE00247ED5 /* RePoseTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RePoseTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F465FBE92DC7A9AE00247ED5 /* RePoseUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RePoseUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		F4B353DD2DD7966200B325D0 /* Exceptions for "RePose" folder in "RePose" target */ = {
+		F4B353DD2DD7966200B325D0 /* Exceptions for "RePose" folder in "PosePal" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
 			);
-			target = F465FBCE2DC7A9AD00247ED5 /* RePose */;
+			target = F465FBCE2DC7A9AD00247ED5 /* PosePal */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
@@ -43,7 +43,7 @@
 		F465FBD12DC7A9AD00247ED5 /* RePose */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				F4B353DD2DD7966200B325D0 /* Exceptions for "RePose" folder in "RePose" target */,
+				F4B353DD2DD7966200B325D0 /* Exceptions for "RePose" folder in "PosePal" target */,
 			);
 			path = RePose;
 			sourceTree = "<group>";
@@ -98,7 +98,7 @@
 		F465FBD02DC7A9AD00247ED5 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				F465FBCF2DC7A9AD00247ED5 /* RePose.app */,
+				F465FBCF2DC7A9AD00247ED5 /* PosePal.app */,
 				F465FBDF2DC7A9AE00247ED5 /* RePoseTests.xctest */,
 				F465FBE92DC7A9AE00247ED5 /* RePoseUITests.xctest */,
 			);
@@ -108,9 +108,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		F465FBCE2DC7A9AD00247ED5 /* RePose */ = {
+		F465FBCE2DC7A9AD00247ED5 /* PosePal */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = F465FBF32DC7A9AE00247ED5 /* Build configuration list for PBXNativeTarget "RePose" */;
+			buildConfigurationList = F465FBF32DC7A9AE00247ED5 /* Build configuration list for PBXNativeTarget "PosePal" */;
 			buildPhases = (
 				F465FBCB2DC7A9AD00247ED5 /* Sources */,
 				F465FBCC2DC7A9AD00247ED5 /* Frameworks */,
@@ -123,11 +123,11 @@
 			fileSystemSynchronizedGroups = (
 				F465FBD12DC7A9AD00247ED5 /* RePose */,
 			);
-			name = RePose;
+			name = PosePal;
 			packageProductDependencies = (
 			);
 			productName = RePose;
-			productReference = F465FBCF2DC7A9AD00247ED5 /* RePose.app */;
+			productReference = F465FBCF2DC7A9AD00247ED5 /* PosePal.app */;
 			productType = "com.apple.product-type.application";
 		};
 		F465FBDE2DC7A9AE00247ED5 /* RePoseTests */ = {
@@ -213,7 +213,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				F465FBCE2DC7A9AD00247ED5 /* RePose */,
+				F465FBCE2DC7A9AD00247ED5 /* PosePal */,
 				F465FBDE2DC7A9AE00247ED5 /* RePoseTests */,
 				F465FBE82DC7A9AE00247ED5 /* RePoseUITests */,
 			);
@@ -271,12 +271,12 @@
 /* Begin PBXTargetDependency section */
 		F465FBE12DC7A9AE00247ED5 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = F465FBCE2DC7A9AD00247ED5 /* RePose */;
+			target = F465FBCE2DC7A9AD00247ED5 /* PosePal */;
 			targetProxy = F465FBE02DC7A9AE00247ED5 /* PBXContainerItemProxy */;
 		};
 		F465FBEB2DC7A9AE00247ED5 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = F465FBCE2DC7A9AD00247ED5 /* RePose */;
+			target = F465FBCE2DC7A9AD00247ED5 /* PosePal */;
 			targetProxy = F465FBEA2DC7A9AE00247ED5 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -406,6 +406,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = RePose/RePose.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -414,26 +415,29 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = RePose/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = RePose;
+				INFOPLIST_KEY_CFBundleDisplayName = PosePal;
 				INFOPLIST_KEY_NSCameraUsageDescription = "We need access to the camera to track your body for exercise feedback.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UIStatusBarStyle = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.may.RePose;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yourname.posepal;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -442,6 +446,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = RePose/RePose.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -450,26 +455,29 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = RePose/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = RePose;
+				INFOPLIST_KEY_CFBundleDisplayName = PosePal;
 				INFOPLIST_KEY_NSCameraUsageDescription = "We need access to the camera to track your body for exercise feedback.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UIStatusBarStyle = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.may.RePose;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yourname.posepal;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -557,7 +565,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		F465FBF32DC7A9AE00247ED5 /* Build configuration list for PBXNativeTarget "RePose" */ = {
+		F465FBF32DC7A9AE00247ED5 /* Build configuration list for PBXNativeTarget "PosePal" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F465FBF42DC7A9AE00247ED5 /* Debug */,

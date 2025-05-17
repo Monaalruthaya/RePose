@@ -1,7 +1,9 @@
 import UIKit
 import Vision
+import SwiftUI
+import TipKit
 
-@available(iOS 14.0, *)
+@available(iOS 17.0, *)
 class MainViewController: UIViewController {
     @IBOutlet var imageView: UIImageView!
     @IBOutlet weak var labelStack: UIStackView!
@@ -10,15 +12,13 @@ class MainViewController: UIViewController {
     @IBOutlet weak var buttonStack: UIStackView!
     @IBOutlet weak var summaryButton: UIButton!
     @IBOutlet weak var cameraButton: UIButton!
-
-    // ✅ عناصر جديدة
     @IBOutlet weak var guideLabel: UILabel!
-//    @IBOutlet weak var feedbackLabel: UILabel!
-//    @IBOutlet weak var feedbackBackgroundView: UIView!
 
     var videoCapture: VideoCapture!
     var videoProcessingChain: VideoProcessingChain!
     var actionFrameCounts = [String: Int]()
+
+    private var tipHostingController: UIHostingController<AnyView>?
 }
 
 // MARK: - View Controller Events
@@ -27,36 +27,37 @@ extension MainViewController {
         super.viewDidLoad()
         UIApplication.shared.isIdleTimerDisabled = true
 
+        imageView.contentMode = .scaleAspectFill
+
+        // ✅ تفعيل TipKit
+        if #available(iOS 17.0, *) {
+            try? Tips.configure()
+        }
+
+        // ✅ لون زر الرجوع الرسمي
+        navigationController?.navigationBar.tintColor = UIColor(named: "PrimaryPurple")
+
+        // تهيئة المكونات
         let views = [labelStack, buttonStack, cameraButton, summaryButton]
         views.forEach { view in
             view?.layer.cornerRadius = 10
             view?.overrideUserInterfaceStyle = .dark
         }
 
-        // تجهيز السلسلة
         videoProcessingChain = VideoProcessingChain()
         videoProcessingChain.delegate = self
 
-        // تشغيل الكاميرا مباشرة
         videoCapture = VideoCapture()
         videoCapture.delegate = self
         videoCapture.isEnabled = true
 
-        // إظهار التعليمات فوق الكاميرا
         guideLabel.text = "Make sure your full body is visible"
         guideLabel.isHidden = false
 
-//        feedbackLabel.isHidden = true
-//        feedbackBackgroundView.isHidden = true
-
-        // إخفاء التعليمات بعد ٣ ثواني
         DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
             self.guideLabel.isHidden = true
         }
-
-        updateUILabelsWithPrediction(.startingPrediction)
     }
-
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -73,13 +74,11 @@ extension MainViewController {
     @IBAction func onCameraButtonTapped(_: Any) {
         videoCapture.toggleCameraSelection()
     }
-
 }
 
 // MARK: - Video Capture Delegate
 extension MainViewController: VideoCaptureDelegate {
     func videoCapture(_ videoCapture: VideoCapture, didCreate framePublisher: FramePublisher) {
-        updateUILabelsWithPrediction(.startingPrediction)
         videoProcessingChain.upstreamFramePublisher = framePublisher
     }
 }
@@ -91,11 +90,8 @@ extension MainViewController: VideoProcessingChainDelegate {
             addFrameCount(frameCount, to: actionPrediction.label)
         }
 
-        // إظهار التغذية الراجعة
         let isCorrect = (actionPrediction.confidence ?? 0) >= 0.9
-        showFeedback(isCorrect: isCorrect)
-
-        updateUILabelsWithPrediction(actionPrediction)
+        showFeedbackTip(isCorrect: isCorrect)
     }
 
     func videoProcessingChain(_ chain: VideoProcessingChain, didDetect poses: [Pose]?, in frame: CGImage) {
@@ -112,56 +108,67 @@ extension MainViewController {
         actionFrameCounts[actionLabel] = totalFrames
     }
 
-    private func updateUILabelsWithPrediction(_ prediction: ActionPrediction) {
-       // DispatchQueue.main.async { self.actionLabel.text = prediction.label }
-        let confidenceString = prediction.confidenceString ?? "Observing..."
-      //  DispatchQueue.main.async { self.confidenceLabel.text = confidenceString }
-    }
-
     private func drawPoses(_ poses: [Pose]?, onto frame: CGImage) {
         let renderFormat = UIGraphicsImageRendererFormat()
         renderFormat.scale = 1.0
-
         let frameSize = CGSize(width: frame.width, height: frame.height)
-        let poseRenderer = UIGraphicsImageRenderer(size: frameSize, format: renderFormat)
 
-        let frameWithPosesRendering = poseRenderer.image { rendererContext in
-            let cgContext = rendererContext.cgContext
-            let inverse = cgContext.ctm.inverted()
-            cgContext.concatenate(inverse)
-            let imageRectangle = CGRect(origin: .zero, size: frameSize)
-            cgContext.draw(frame, in: imageRectangle)
+        let frameWithPosesRendering = UIGraphicsImageRenderer(size: frameSize, format: renderFormat).image { context in
+            let cg = context.cgContext
+            cg.concatenate(cg.ctm.inverted())
+            cg.draw(frame, in: CGRect(origin: .zero, size: frameSize))
 
-            let pointTransform = CGAffineTransform(scaleX: frameSize.width, y: frameSize.height)
-            guard let poses = poses else { return }
-
-            for pose in poses {
-                pose.drawWireframeToContext(cgContext, applying: pointTransform)
-            }
+            let transform = CGAffineTransform(scaleX: frameSize.width, y: frameSize.height)
+            poses?.forEach { $0.drawWireframeToContext(cg, applying: transform) }
         }
 
-        DispatchQueue.main.async { self.imageView.image = frameWithPosesRendering }
-    }
-
-    // ✅ تغذية راجعة للحركة
-//    private func showFeedback(isCorrect: Bool) {
-//        feedbackLabel.text = isCorrect ? "Excellent! Keep going!✅" : "Wrong Move!❌"
-//        feedbackBackgroundView.backgroundColor = isCorrect ? .systemGreen : .systemRed
-//
-//        feedbackLabel.isHidden = false
-//        feedbackBackgroundView.isHidden = false
-//
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-//            self.feedbackLabel.isHidden = true
-//            self.feedbackBackgroundView.isHidden = true
-//        }
-//    }
-    private func showFeedback(isCorrect: Bool) {
-        let feedback = isCorrect ? "✅ Excellent!" : "❌ Wrong Move!"
         DispatchQueue.main.async {
-            self.actionLabel.text = feedback
+            self.imageView.image = frameWithPosesRendering
         }
     }
 
+    private func showFeedbackTip(isCorrect: Bool) {
+        let tipView = TipView(isCorrect ? FeedbackCorrectTip() : FeedbackWrongTip()).padding()
 
+        let hosting = UIHostingController(rootView: AnyView(tipView))
+        hosting.view.backgroundColor = .clear
+        hosting.view.translatesAutoresizingMaskIntoConstraints = false
+
+        if let current = tipHostingController {
+            current.willMove(toParent: nil)
+            current.view.removeFromSuperview()
+            current.removeFromParent()
+            tipHostingController = nil
+        }
+
+        addChild(hosting)
+        view.addSubview(hosting.view)
+        NSLayoutConstraint.activate([
+            hosting.view.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            hosting.view.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20)
+        ])
+
+        hosting.didMove(toParent: self)
+        tipHostingController = hosting
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+            hosting.willMove(toParent: nil)
+            hosting.view.removeFromSuperview()
+            hosting.removeFromParent()
+            self.tipHostingController = nil
+        }
+    }
+}
+
+// MARK: - TipKit Tips
+@available(iOS 17.0, *)
+struct FeedbackCorrectTip: Tip {
+    var title: Text { Text("✅ Excellent!") }
+    var message: Text? { Text("You're doing great!") }
+}
+
+@available(iOS 17.0, *)
+struct FeedbackWrongTip: Tip {
+    var title: Text { Text("❌ Wrong Move!") }
+    var message: Text? { Text("Adjust your form and try again.") }
 }
