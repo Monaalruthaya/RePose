@@ -90,24 +90,23 @@ struct WorkoutCard: View {
 // MARK: - Detail View with Video
 struct WorkoutDetailView: View {
     let workout: Workout
-    
+    @State private var showWorkoutScreen = false // ✅هنا
+
     var body: some View {
         VStack(spacing: 24) {
-            // Sample video player (replace with actual file URL if needed)
             if let url = Bundle.main.url(forResource: workout.imageName, withExtension: "mp4") {
                 VideoPlayer(player: AVPlayer(url: url))
                     .frame(height: 250)
                     .cornerRadius(16)
                     .padding(.horizontal)
             } else {
-                // Fallback image if video not found
                 Image(workout.imageName)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .cornerRadius(16)
                     .padding(.horizontal)
             }
-            
+
             VStack(alignment: .leading, spacing: 8) {
                 Text(workout.title)
                     .font(.system(size: 28, weight: .bold))
@@ -116,11 +115,11 @@ struct WorkoutDetailView: View {
                     .foregroundColor(.secondary)
             }
             .padding(.horizontal)
-            
+
             Spacer()
-            
+
             Button(action: {
-                print("Start Workout tapped")
+                showWorkoutScreen = true // ✅ هنا
             }) {
                 Text("Start Workout")
                     .font(.headline)
@@ -135,8 +134,12 @@ struct WorkoutDetailView: View {
         .padding(.top)
         .navigationTitle(workout.title)
         .navigationBarTitleDisplayMode(.inline)
+        .sheet(isPresented: $showWorkoutScreen) {
+            MainViewWrapper() // ✅ هنا يتم فتح شاشة MainViewController
+        }
     }
 }
+
 
 // MARK: - UIKit Blur
 struct VisualEffectBlur: UIViewRepresentable {
