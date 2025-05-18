@@ -13,7 +13,7 @@ struct OnboardingScreen1: View {
             Spacer()
             Text("Welcome to").font(.title)
                 .padding(.top, -125)
-            Text("Motion").font(.title).bold().foregroundColor(.purple)
+            Text("Motion").font(.title).bold().foregroundColor(.accent)
                 .padding(.top, -115)
             Image("plank") // Replace with your image name
                 .resizable().scaledToFit().frame(height: 300)
@@ -34,7 +34,7 @@ struct OnboardingScreen2: View {
             Image("squat") // Replace with your image
                 .resizable().scaledToFit().frame(height: 300)
             Text("Real-Time Feedback")
-                .font(.title).bold().foregroundColor(.purple)
+                .font(.title).bold().foregroundColor(.accent)
             Text("Perfect your form instantly")
                 .multilineTextAlignment(.center)
                 .padding()
@@ -54,7 +54,7 @@ struct OnboardingScreen3: View {
                 .resizable().scaledToFit().frame(height: 300)
                 .padding(.top, 60)
             Text("Choose Your Workout")
-                .font(.title).bold().foregroundColor(.purple)
+                .font(.title).bold().foregroundColor(.accent)
             Spacer()
             Button(action: {
                 onFinish()
@@ -63,7 +63,7 @@ struct OnboardingScreen3: View {
                     .fontWeight(.bold)
                     .frame(maxWidth: .infinity)
                     .padding()
-                    .background(Color.purple)
+                    .background(Color.accent)
                     .foregroundColor(.white)
                     .cornerRadius(10)
             }

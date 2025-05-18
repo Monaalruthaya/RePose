@@ -7,8 +7,10 @@
 
 import SwiftUI
 
+
 struct SplashScreenView: View {
     @State private var showOnboarding = false
+    @State private var scale: CGFloat = 1.0
     @State private var opacity = 1.0
 
     var body: some View {
@@ -16,15 +18,17 @@ struct SplashScreenView: View {
             OnboardingContainerView()
         } else {
             ZStack {
-                Color.purple.edgesIgnoringSafeArea(.all)
-                Image("logo") // Replace with your actual asset name
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 150)
+                Color.accent.edgesIgnoringSafeArea(.all)
+                
+                Text("PosePal")
+                    .font(.system(size: 40, weight: .bold, design: .rounded))
+                    .foregroundColor(.white)
+                    .scaleEffect(scale)
                     .opacity(opacity)
             }
             .onAppear {
-                withAnimation(.easeInOut(duration: 2.0)) {
+                withAnimation(.easeInOut(duration: 1.5)) {
+                    scale = 1.2
                     opacity = 0.0
                 }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
@@ -35,13 +39,14 @@ struct SplashScreenView: View {
     }
 }
 
+
 struct OnboardingContainerView: View {
     @AppStorage("hasLaunchedBefore") private var hasLaunchedBefore = false
     @State private var currentIndex = 0
     
     init() {
         // Customize the dots
-        UIPageControl.appearance().currentPageIndicatorTintColor = UIColor.purple
+        UIPageControl.appearance().currentPageIndicatorTintColor = UIColor.accent
         UIPageControl.appearance().pageIndicatorTintColor = UIColor.systemGray4
     }
     
@@ -65,7 +70,7 @@ struct OnboardingContainerView: View {
                         Button("Skip") {
                             hasLaunchedBefore = true
                         }
-                        .foregroundColor(.purple)
+                        .foregroundColor(.accent)
                         .padding()
                     }
                     Spacer()
