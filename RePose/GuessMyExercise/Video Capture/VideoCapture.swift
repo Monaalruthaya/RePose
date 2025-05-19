@@ -256,4 +256,10 @@ extension VideoCapture {
 
         return true
     }
+    
+    
+    var captureSessionPublic: AVCaptureSession {
+        return self.captureSession
+    }
+
 }

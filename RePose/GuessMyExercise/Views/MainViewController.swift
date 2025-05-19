@@ -13,35 +13,41 @@ class MainViewController: UIViewController {
     @IBOutlet weak var summaryButton: UIButton!
     @IBOutlet weak var cameraButton: UIButton!
     @IBOutlet weak var guideLabel: UILabel!
+    @IBOutlet weak var guideContainerView: UIView!
+    @IBOutlet weak var feedbackContainerView: UIView!
+    @IBOutlet weak var feedbackLabel: UILabel!
 
     var videoCapture: VideoCapture!
     var videoProcessingChain: VideoProcessingChain!
     var actionFrameCounts = [String: Int]()
+    
+    // ✅ عشان نمنع التقييم أثناء عرض الدليل
+    private var guideHasDisappeared = false
+    var isFeedbackVisible = false
 
-    private var tipHostingController: UIHostingController<AnyView>?
 }
 
 // MARK: - View Controller Events
 extension MainViewController {
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         UIApplication.shared.isIdleTimerDisabled = true
 
         imageView.contentMode = .scaleAspectFill
+        setupUI()
+        
+        feedbackContainerView.layer.cornerRadius = 20
+        feedbackContainerView.clipsToBounds = true
 
-        // ✅ تفعيل TipKit
-        if #available(iOS 17.0, *) {
-            try? Tips.configure()
-        }
 
-        // ✅ لون زر الرجوع الرسمي
-        navigationController?.navigationBar.tintColor = UIColor(named: "PrimaryPurple")
-
-        // تهيئة المكونات
-        let views = [labelStack, buttonStack, cameraButton, summaryButton]
-        views.forEach { view in
-            view?.layer.cornerRadius = 10
-            view?.overrideUserInterfaceStyle = .dark
+        // ✅ عرض دليل البداية ثم إخفاؤه
+        guideContainerView.isHidden = false
+        guideLabel.text = "Make sure your full body is visible"
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+            self.guideContainerView.isHidden = true
+            self.guideHasDisappeared = true
         }
 
         videoProcessingChain = VideoProcessingChain()
@@ -50,13 +56,6 @@ extension MainViewController {
         videoCapture = VideoCapture()
         videoCapture.delegate = self
         videoCapture.isEnabled = true
-
-        guideLabel.text = "Make sure your full body is visible"
-        guideLabel.isHidden = false
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
-            self.guideLabel.isHidden = true
-        }
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -66,6 +65,17 @@ extension MainViewController {
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         videoCapture.updateDeviceOrientation()
+    }
+
+    private func setupUI() {
+        navigationController?.navigationBar.tintColor = UIColor(named: "PrimaryPurple")
+        let views = [labelStack, buttonStack, cameraButton, summaryButton]
+        views.forEach {
+            $0?.layer.cornerRadius = 10
+            $0?.overrideUserInterfaceStyle = .dark
+        }
+        feedbackContainerView.isHidden = true
+        feedbackContainerView.alpha = 0
     }
 }
 
@@ -91,7 +101,7 @@ extension MainViewController: VideoProcessingChainDelegate {
         }
 
         let isCorrect = (actionPrediction.confidence ?? 0) >= 0.9
-        showFeedbackTip(isCorrect: isCorrect)
+        showFeedbackResult(isCorrect: isCorrect)
     }
 
     func videoProcessingChain(_ chain: VideoProcessingChain, didDetect poses: [Pose]?, in frame: CGImage) {
@@ -127,48 +137,45 @@ extension MainViewController {
         }
     }
 
-    private func showFeedbackTip(isCorrect: Bool) {
-        let tipView = TipView(isCorrect ? FeedbackCorrectTip() : FeedbackWrongTip()).padding()
-
-        let hosting = UIHostingController(rootView: AnyView(tipView))
-        hosting.view.backgroundColor = .clear
-        hosting.view.translatesAutoresizingMaskIntoConstraints = false
-
-        if let current = tipHostingController {
-            current.willMove(toParent: nil)
-            current.view.removeFromSuperview()
-            current.removeFromParent()
-            tipHostingController = nil
+    private func showFeedbackResult(isCorrect: Bool) {
+        guard guideHasDisappeared else {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                self.showFeedbackResult(isCorrect: isCorrect)
+            }
+            return
         }
 
-        addChild(hosting)
-        view.addSubview(hosting.view)
-        NSLayoutConstraint.activate([
-            hosting.view.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            hosting.view.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20)
-        ])
+        DispatchQueue.main.async {
+            self.feedbackContainerView.backgroundColor = isCorrect
+                ? UIColor(red: 0.65, green: 1.0, blue: 0.0157, alpha: 0.65)
+                : UIColor.red.withAlphaComponent(0.65)
 
-        hosting.didMove(toParent: self)
-        tipHostingController = hosting
+            self.feedbackLabel.text = isCorrect ? "Excellent!" : "Wrong Move!"
+            self.feedbackLabel.textColor = .white
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
-            hosting.willMove(toParent: nil)
-            hosting.view.removeFromSuperview()
-            hosting.removeFromParent()
-            self.tipHostingController = nil
+
+            self.feedbackContainerView.alpha = 1
+            self.feedbackContainerView.isHidden = false
+
+            // ✅ إظهار بدون أنيميشن إذا كان ظاهر مسبقًا
+            if self.isFeedbackVisible == false {
+                self.feedbackContainerView.alpha = 0
+                UIView.animate(withDuration: 0.3) {
+                    self.feedbackContainerView.alpha = 1
+                }
+            }
+
+            self.isFeedbackVisible = true
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+                UIView.animate(withDuration: 0.3, animations: {
+                    self.feedbackContainerView.alpha = 0
+                }) { _ in
+                    self.feedbackContainerView.isHidden = true
+                    self.isFeedbackVisible = false
+                }
+            }
         }
     }
-}
 
-// MARK: - TipKit Tips
-@available(iOS 17.0, *)
-struct FeedbackCorrectTip: Tip {
-    var title: Text { Text("✅ Excellent!") }
-    var message: Text? { Text("You're doing great!") }
-}
-
-@available(iOS 17.0, *)
-struct FeedbackWrongTip: Tip {
-    var title: Text { Text("❌ Wrong Move!") }
-    var message: Text? { Text("Adjust your form and try again.") }
 }

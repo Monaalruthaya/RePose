@@ -5,7 +5,6 @@ Abstract:
 A `Connection` defines the line between two landmarks.
  The only real purpose for a connection is to draw that line with a gradient.
 */
-
 import UIKit
 
 extension Pose {
@@ -13,20 +12,8 @@ extension Pose {
     struct Connection: Equatable {
         static let width: CGFloat = 12.0
 
-        /// The gradient colors the connection uses to draw its line.
-        static let colors = [UIColor.systemGreen.cgColor,
-                             UIColor.systemYellow.cgColor,
-                             UIColor.systemOrange.cgColor,
-                             UIColor.systemRed.cgColor,
-                             UIColor.systemPurple.cgColor,
-                             UIColor.systemBlue.cgColor
-        ] as CFArray
-
-        static let gradientColorSpace = CGColorSpace(name: CGColorSpace.sRGB)
-
-        static let gradient = CGGradient(colorsSpace: gradientColorSpace,
-                                         colors: colors,
-                                         locations: [0, 0.2, 0.33, 0.5, 0.66, 0.8])!
+        // ✅ اللون: A6FF04 مع شفافية 65%
+        static let color = UIColor(red: 0.65, green: 1.0, blue: 0.0157, alpha: 0.65).cgColor
 
         /// The connection's first endpoint.
         private let point1: CGPoint
@@ -40,7 +27,10 @@ extension Pose {
         /// - Parameters:
         ///   - one: The location for one end of the connection.
         ///   - two: The location for the other end of the connection.
-        init(_ one: CGPoint, _ two: CGPoint) { point1 = one; point2 = two }
+        init(_ one: CGPoint, _ two: CGPoint) {
+            point1 = one
+            point2 = two
+        }
 
         /// Draws a line from the connection's first endpoint to its other
         /// endpoint.
@@ -48,35 +38,26 @@ extension Pose {
         ///   - context: The Core Graphics context to draw to.
         ///   - transform: An affine transform that scales and translate each
         ///   endpoint.
-        ///   - scale: The scale that adjusts the line's thickness
+        ///   - scale: The scale that adjusts the line's thickness.
         func drawToContext(_ context: CGContext,
                            applying transform: CGAffineTransform? = nil,
                            at scale: CGFloat = 1.0) {
-
             let start = point1.applying(transform ?? .identity)
             let end = point2.applying(transform ?? .identity)
 
-            // Store the current graphics state.
             context.saveGState()
-
-            // Restore the graphics state after the method finishes.
             defer { context.restoreGState() }
 
-            // Set the line's thickness.
             context.setLineWidth(Connection.width * scale)
+            context.setStrokeColor(Connection.color)
 
-            // Draw the line.
             context.move(to: start)
             context.addLine(to: end)
-            context.replacePathWithStrokedPath()
-            context.clip()
-            context.drawLinearGradient(Connection.gradient,
-                                       start: start,
-                                       end: end,
-                                       options: .drawsAfterEndLocation)
+            context.strokePath()
         }
     }
 }
+
 
 extension Pose {
     /// A series of joint pairs that define the wireframe lines of a pose.

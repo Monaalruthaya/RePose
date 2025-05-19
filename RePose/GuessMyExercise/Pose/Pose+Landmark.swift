@@ -57,14 +57,14 @@ extension Pose {
                            applying transform: CGAffineTransform? = nil,
                            at scale: CGFloat = 1.0) {
 
-            context.setFillColor(UIColor.white.cgColor)
-            context.setStrokeColor(UIColor.darkGray.cgColor)
+            // اللون: A6FF04 مع شفافية 65%
+            let customColor = UIColor(red: 0.65, green: 1.0, blue: 0.0157, alpha: 0.65).cgColor
 
-            // Define the rectangle's origin by applying the transform to the
-            // landmark's normalized location.
+            context.setFillColor(customColor)
+            context.setStrokeColor(customColor)
+
             let origin = location.applying(transform ?? .identity)
 
-            // Define the size of the circle's rectangle with the radius.
             let radius = Landmark.radius * scale
             let diameter = radius * 2
             let rectangle = CGRect(x: origin.x - radius,
@@ -75,5 +75,6 @@ extension Pose {
             context.addEllipse(in: rectangle)
             context.drawPath(using: CGPathDrawingMode.fillStroke)
         }
+
     }
 }
