@@ -4,7 +4,9 @@
 //
 //  Created by mona alruthaya on 06/11/1446 AH.
 //
+
 import SwiftUI
+import AVKit
 import AVFoundation
 import _AVKit_SwiftUI
 
@@ -14,28 +16,29 @@ struct Workout: Identifiable {
     let imageName: String
     let title: String
     let subtitle: String
+    let videoName: String
 }
 
-// MARK: - Main View
+// MARK: - Content View
 struct ContentView: View {
     let workouts: [Workout] = [
-        Workout(imageName: "img1", title: "Burpees", subtitle: "Bodyweight Strength"),
-        Workout(imageName: "img2", title: "Jumping Jack", subtitle: "Cardio Blast"),
-        Workout(imageName: "img3", title: "Lunges", subtitle: "Leg Power")
+        Workout(imageName: "img1", title: "Burpees", subtitle: "Bodyweight Strength", videoName: "Burpees"),
+        Workout(imageName: "img2", title: "Jumping Jack", subtitle: "Cardio Blast", videoName: "JumpingJack"),
+        Workout(imageName: "img3", title: "Lunges", subtitle: "Leg Power", videoName: "Lunges")
     ]
-    
+
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 0) {
                     Text("Welcome")
                         .font(.system(size: 28, weight: .bold))
-                    
+
                     Text("Choose your workout and shine today!")
                         .font(.system(size: 16))
                         .foregroundColor(.secondary)
                         .padding(.bottom, 20)
-                    
+
                     ForEach(workouts) { workout in
                         NavigationLink(destination: WorkoutDetailView(workout: workout)) {
                             WorkoutCard(workout: workout)
@@ -62,11 +65,11 @@ struct WorkoutCard: View {
                 .frame(width: 316, height: 190)
                 .clipped()
                 .cornerRadius(20)
-            
+
             ZStack {
                 VisualEffectBlur(blurStyle: .systemUltraThinMaterial)
                     .clipShape(RoundedCorner(radius: 20, corners: [.bottomLeft, .bottomRight]))
-                
+
                 VStack(alignment: .leading, spacing: 4) {
                     Text(workout.title)
                         .font(.system(size: 22, weight: .semibold))
@@ -83,59 +86,69 @@ struct WorkoutCard: View {
             .frame(width: 316)
         }
         .frame(width: 316, height: 190)
+        .shadow(color: Color.black.opacity(0.1), radius: 0.5, x: 0, y: 1)
         .padding(.bottom, 33)
     }
 }
 
-// MARK: - Detail View with Video
+// MARK: - Workout Detail View
+
 struct WorkoutDetailView: View {
     let workout: Workout
-    @State private var showWorkoutScreen = false // ✅هنا
+    @State private var showWorkoutScreen = false
 
     var body: some View {
-        VStack(spacing: 24) {
-            if let url = Bundle.main.url(forResource: workout.imageName, withExtension: "mp4") {
-                VideoPlayer(player: AVPlayer(url: url))
-                    .frame(height: 250)
-                    .cornerRadius(16)
-                    .padding(.horizontal)
-            } else {
-                Image(workout.imageName)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .cornerRadius(16)
-                    .padding(.horizontal)
-            }
+        ScrollView {
+            VStack(spacing: 30) {
+                
+                // النص قبل الفيديو
+                Text("Before starting your workout we recommend to watch the ")
+                    + Text("video:")
+                        .foregroundColor(Color.accent)
+                
+                // فيديو التمرين
+                if let url = Bundle.main.url(forResource: workout.videoName, withExtension: "mp4") {
+                    VideoPlayer(player: AVPlayer(url: url))
+                        .frame(height: 250)
+                        .cornerRadius(20)
+                        .padding(.horizontal)
+                } else {
+                    Text("Video not found.")
+                        .foregroundColor(.red)
+                }
 
-            VStack(alignment: .leading, spacing: 8) {
-                Text(workout.title)
-                    .font(.system(size: 28, weight: .bold))
-                Text("Get ready for your \(workout.subtitle.lowercased()). This workout is great for all fitness levels and will help you stay in shape.")
-                    .font(.system(size: 16))
-                    .foregroundColor(.secondary)
-            }
-            .padding(.horizontal)
+                // النص الإرشادي Form Tip
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Form Tip:")
+                        .font(.headline)
+                        .foregroundColor(Color.accent)
+                    Text("Keep your back straight and your front knee above your ankle")
+                        .foregroundColor(.primary)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal)
 
-            Spacer()
-
-            Button(action: {
-                showWorkoutScreen = true // ✅ هنا
-            }) {
-                Text("Start Workout")
-                    .font(.headline)
-                    .foregroundColor(.white)
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color.accentColor)
-                    .cornerRadius(14)
-                    .padding(.horizontal)
+                // زر Start Workout
+                Button(action: {
+                    showWorkoutScreen = true
+                }) {
+                    Text("Start Workout")
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .padding()
+                        .frame(width: 220) // عرض متوسط
+                        .background(Color.accent)
+                        .cornerRadius(14)
+                }
+                .padding(.top, 30)
             }
+            .padding(.top, 60)
+            .padding(.bottom, 40)
         }
-        .padding(.top)
         .navigationTitle(workout.title)
         .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $showWorkoutScreen) {
-            MainViewWrapper() // ✅ هنا يتم فتح شاشة MainViewController
+            MainViewWrapper()
         }
     }
 }
@@ -175,8 +188,8 @@ extension View {
     }
 }
 
+
 // MARK: - Preview
 #Preview {
     ContentView()
 }
-
