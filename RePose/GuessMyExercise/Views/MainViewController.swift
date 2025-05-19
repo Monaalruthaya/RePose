@@ -35,6 +35,16 @@ extension MainViewController {
         super.viewDidLoad()
         UIApplication.shared.isIdleTimerDisabled = true
 
+        let backButton = UIButton(type: .system)
+        backButton.setTitle("Back", for: .normal)
+        backButton.setTitleColor(UIColor(named: "PrimaryPurple"), for: .normal)
+        backButton.setImage(UIImage(systemName: "chevron.backward"), for: .normal)
+        backButton.tintColor = UIColor(named: "PrimaryPurple")
+        backButton.addTarget(self, action: #selector(handleBackButton), for: .touchUpInside)
+
+        // حط الزر في يسار الناف بار
+        let backBarButtonItem = UIBarButtonItem(customView: backButton)
+        navigationItem.leftBarButtonItem = backBarButtonItem
         imageView.contentMode = .scaleAspectFill
         setupUI()
         
@@ -176,6 +186,9 @@ extension MainViewController {
                 }
             }
         }
+    }
+    @objc private func handleBackButton() {
+        navigationController?.popViewController(animated: true)
     }
 
 }

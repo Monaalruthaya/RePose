@@ -147,7 +147,7 @@ struct WorkoutDetailView: View {
         }
         .navigationTitle(workout.title)
         .navigationBarTitleDisplayMode(.inline)
-        .sheet(isPresented: $showWorkoutScreen) {
+        .fullScreenCover(isPresented: $showWorkoutScreen) {
             MainViewWrapper()
         }
     }
