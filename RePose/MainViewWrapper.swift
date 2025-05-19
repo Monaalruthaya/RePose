@@ -8,14 +8,24 @@
 
 import SwiftUI
 
-// ✅ هذا الملف يربط SwiftUI مع MainViewController من UIKit
-struct MainViewWrapper: UIViewControllerRepresentable {
-    func makeUIViewController(context: Context) -> MainViewController {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        return storyboard.instantiateViewController(withIdentifier: "MainViewController") as! MainViewController
-    }
 
-    func updateUIViewController(_ uiViewController: MainViewController, context: Context) {
-        // ما نحتاج نحدث شي هنا الآن
-    }
+struct MainViewWrapper: UIViewControllerRepresentable {
+    @Environment(\.dismiss) var dismiss
+
+     func makeUIViewController(context: Context) -> UINavigationController {
+         let storyboard = UIStoryboard(name: "Main", bundle: nil)
+         let vc = storyboard.instantiateViewController(withIdentifier: "MainViewController") as! MainViewController
+
+         // اضيفي الكولباك
+         vc.onDismiss = {
+             dismiss()
+         }
+
+         return UINavigationController(rootViewController: vc)
+         
+         
+     }
+
+
+    func updateUIViewController(_ uiViewController: UINavigationController, context: Context) {}
 }

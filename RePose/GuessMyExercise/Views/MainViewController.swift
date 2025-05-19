@@ -20,39 +20,23 @@ class MainViewController: UIViewController {
     var videoCapture: VideoCapture!
     var videoProcessingChain: VideoProcessingChain!
     var actionFrameCounts = [String: Int]()
-    
-    // ✅ عشان نمنع التقييم أثناء عرض الدليل
+    var onDismiss: (() -> Void)?
+
     private var guideHasDisappeared = false
     var isFeedbackVisible = false
 
-}
-
-// MARK: - View Controller Events
-extension MainViewController {
-    
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         UIApplication.shared.isIdleTimerDisabled = true
 
-        let backButton = UIButton(type: .system)
-        backButton.setTitle("Back", for: .normal)
-        backButton.setTitleColor(UIColor(named: "PrimaryPurple"), for: .normal)
-        backButton.setImage(UIImage(systemName: "chevron.backward"), for: .normal)
-        backButton.tintColor = UIColor(named: "PrimaryPurple")
-        backButton.addTarget(self, action: #selector(handleBackButton), for: .touchUpInside)
-
-        // حط الزر في يسار الناف بار
-        let backBarButtonItem = UIBarButtonItem(customView: backButton)
-        navigationItem.leftBarButtonItem = backBarButtonItem
-        imageView.contentMode = .scaleAspectFill
+        setupBackAndCameraButtons()
         setupUI()
-        
+
+        print("✅ داخل UINavigationController؟", navigationController != nil)
+
         feedbackContainerView.layer.cornerRadius = 20
         feedbackContainerView.clipsToBounds = true
 
-
-        // ✅ عرض دليل البداية ثم إخفاؤه
         guideContainerView.isHidden = false
         guideLabel.text = "Make sure your full body is visible"
         DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
@@ -79,6 +63,9 @@ extension MainViewController {
 
     private func setupUI() {
         navigationController?.navigationBar.tintColor = UIColor(named: "PrimaryPurple")
+        navigationController?.navigationBar.isHidden = false
+        self.title = ""
+
         let views = [labelStack, buttonStack, cameraButton, summaryButton]
         views.forEach {
             $0?.layer.cornerRadius = 10
@@ -87,23 +74,65 @@ extension MainViewController {
         feedbackContainerView.isHidden = true
         feedbackContainerView.alpha = 0
     }
+
+    private func setupBackAndCameraButtons() {
+        // تكبير الرمز
+        let symbolConfig = UIImage.SymbolConfiguration(pointSize: 22, weight: .medium)
+
+        // 🔙 زر الرجوع
+        let backButton = UIButton(type: .system)
+        backButton.setImage(UIImage(systemName: "chevron.backward", withConfiguration: symbolConfig), for: .normal)
+        backButton.setTitle("Back", for: .normal)
+        backButton.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .medium)
+        backButton.tintColor = UIColor(named: "PrimaryPurple")
+        backButton.setTitleColor(UIColor(named: "PrimaryPurple"), for: .normal)
+        backButton.semanticContentAttribute = .forceLeftToRight
+        backButton.contentHorizontalAlignment = .leading
+        backButton.contentEdgeInsets = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
+        backButton.addTarget(self, action: #selector(dismissSelf), for: .touchUpInside)
+        
+        let backBarButton = UIBarButtonItem(customView: backButton)
+
+        // 📷 زر الكاميرا (بشكل أنيق فقط رمز بدون عنوان)
+        let cameraButton = UIButton(type: .system)
+        cameraButton.setImage(UIImage(systemName: "arrow.triangle.2.circlepath.camera", withConfiguration: symbolConfig), for: .normal)
+        cameraButton.tintColor = UIColor(named: "PrimaryPurple")
+        cameraButton.contentHorizontalAlignment = .trailing
+        cameraButton.contentEdgeInsets = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
+        cameraButton.addTarget(self, action: #selector(onCameraButtonTapped), for: .touchUpInside)
+        
+        let cameraBarButton = UIBarButtonItem(customView: cameraButton)
+
+        // التثبيت على الطرفين
+        navigationItem.leftBarButtonItem = backBarButton
+        navigationItem.rightBarButtonItem = cameraBarButton
+    }
+
+    @objc private func dismissSelf() {
+        if let onDismiss = onDismiss {
+            onDismiss()
+        } else {
+            dismiss(animated: true, completion: nil)
+        }
+    }
+
+    @objc private func handleBackButton() {
+        navigationController?.popViewController(animated: true)
+    }
 }
 
-// MARK: - Button Events
 extension MainViewController {
     @IBAction func onCameraButtonTapped(_: Any) {
         videoCapture.toggleCameraSelection()
     }
 }
 
-// MARK: - Video Capture Delegate
 extension MainViewController: VideoCaptureDelegate {
     func videoCapture(_ videoCapture: VideoCapture, didCreate framePublisher: FramePublisher) {
         videoProcessingChain.upstreamFramePublisher = framePublisher
     }
 }
 
-// MARK: - Video Processing Chain Delegate
 extension MainViewController: VideoProcessingChainDelegate {
     func videoProcessingChain(_ chain: VideoProcessingChain, didPredict actionPrediction: ActionPrediction, for frameCount: Int) {
         if actionPrediction.isModelLabel {
@@ -121,7 +150,6 @@ extension MainViewController: VideoProcessingChainDelegate {
     }
 }
 
-// MARK: - Helper methods
 extension MainViewController {
     private func addFrameCount(_ frameCount: Int, to actionLabel: String) {
         let totalFrames = (actionFrameCounts[actionLabel] ?? 0) + frameCount
@@ -163,11 +191,9 @@ extension MainViewController {
             self.feedbackLabel.text = isCorrect ? "Excellent!" : "Wrong Move!"
             self.feedbackLabel.textColor = .white
 
-
             self.feedbackContainerView.alpha = 1
             self.feedbackContainerView.isHidden = false
 
-            // ✅ إظهار بدون أنيميشن إذا كان ظاهر مسبقًا
             if self.isFeedbackVisible == false {
                 self.feedbackContainerView.alpha = 0
                 UIView.animate(withDuration: 0.3) {
@@ -187,8 +213,4 @@ extension MainViewController {
             }
         }
     }
-    @objc private func handleBackButton() {
-        navigationController?.popViewController(animated: true)
-    }
-
 }

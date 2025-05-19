@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="jOw-Qd-QWC">
     <device id="retina6_12" orientation="portrait" appearance="dark"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
-        <capability name="Stack View standard spacing" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -24,39 +23,6 @@
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ArZ-44-lD1">
                                 <rect key="frame" x="0.0" y="-3" width="393" height="852"/>
                             </imageView>
-                            <stackView opaque="NO" clipsSubviews="YES" alpha="0.59999999999999998" contentMode="scaleToFill" semanticContentAttribute="playback" alignment="center" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="rqv-3I-Dlz">
-                                <rect key="frame" x="20" y="67" width="66" height="66"/>
-                                <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BtZ-RJ-x8n" userLabel="CameraButton">
-                                        <rect key="frame" x="8" y="9" width="50" height="47.666666666666671"/>
-                                        <color key="backgroundColor" systemColor="tertiarySystemBackgroundColor"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="50" id="jQ0-i0-gHm"/>
-                                            <constraint firstAttribute="width" secondItem="BtZ-RJ-x8n" secondAttribute="height" multiplier="1:1" id="rfo-h7-Zrd"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" style="UICTFontTextStyleTitle0"/>
-                                        <color key="tintColor" systemColor="labelColor"/>
-                                        <state key="normal" backgroundImage="arrow.trianglehead.2.clockwise.rotate.90.camera" catalog="system">
-                                            <color key="titleColor" red="0.1493234336" green="0.1493234336" blue="0.1493234336" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                            <color key="titleShadowColor" red="0.1493234336" green="0.1493234336" blue="0.1493234336" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                            <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="large" weight="regular"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="onCameraButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="5dj-RN-msI"/>
-                                        </connections>
-                                    </button>
-                                </subviews>
-                                <color key="backgroundColor" name="PrimaryPurple"/>
-                                <color key="tintColor" name="PrimaryPurple"/>
-                                <edgeInsets key="layoutMargins" top="8" left="8" bottom="8" right="8"/>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number">
-                                        <string key="keyPath">layer.cornerRadius
-</string>
-                                        <integer key="value" value="60"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                            </stackView>
                             <stackView opaque="NO" clipsSubviews="YES" alpha="0.80000000000000004" contentMode="scaleAspectFit" semanticContentAttribute="playback" horizontalHuggingPriority="300" misplaced="YES" insetsLayoutMarginsFromSafeArea="NO" axis="vertical" alignment="center" spacing="45" baselineRelativeArrangement="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qXp-yJ-YAz">
                                 <rect key="frame" x="39" y="723.66666666666652" width="305.33333333333331" height="70.333333333333371"/>
                                 <subviews>
@@ -82,7 +48,7 @@
                                 </userDefinedRuntimeAttributes>
                             </stackView>
                             <view opaque="NO" clipsSubviews="YES" alpha="0.80000000000000004" contentMode="scaleToFill" fixedFrame="YES" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vNM-Tm-1cS">
-                                <rect key="frame" x="60" y="676" width="272" height="69"/>
+                                <rect key="frame" x="60" y="689" width="272" height="69"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Excellent!" textAlignment="center" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aGH-F6-I7l">
@@ -108,20 +74,17 @@
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="rqv-3I-Dlz" firstAttribute="top" secondItem="F1z-cx-652" secondAttribute="bottom" constant="8" symbolic="YES" id="8ih-wz-cFy"/>
                             <constraint firstItem="ArZ-44-lD1" firstAttribute="height" secondItem="8bC-Xf-vdC" secondAttribute="height" id="Aya-zL-cj0"/>
                             <constraint firstItem="qXp-yJ-YAz" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="FMn-Jz-w5m"/>
-                            <constraint firstItem="rqv-3I-Dlz" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="20" symbolic="YES" id="UVn-Qa-yFz"/>
                             <constraint firstItem="ArZ-44-lD1" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="V6k-AV-Zk2"/>
                             <constraint firstItem="ArZ-44-lD1" firstAttribute="width" secondItem="8bC-Xf-vdC" secondAttribute="width" id="WVb-lT-DVR"/>
                             <constraint firstItem="qXp-yJ-YAz" firstAttribute="bottom" secondItem="zt5-5N-S1k" secondAttribute="top" constant="-20" id="amu-JW-dob"/>
                             <constraint firstItem="ArZ-44-lD1" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="cS2-Fd-Uy3"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" id="EMg-j4-bqj"/>
                     <nil key="simulatedTopBarMetrics"/>
                     <connections>
-                        <outlet property="buttonStack" destination="rqv-3I-Dlz" id="AYP-gK-Dsy"/>
-                        <outlet property="cameraButton" destination="BtZ-RJ-x8n" id="oUE-9J-a8u"/>
                         <outlet property="feedbackContainerView" destination="vNM-Tm-1cS" id="bHW-mK-1uN"/>
                         <outlet property="feedbackLabel" destination="aGH-F6-I7l" id="rmb-xY-KXF"/>
                         <outlet property="guideContainerView" destination="qXp-yJ-YAz" id="YBO-y3-czW"/>
@@ -132,12 +95,29 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="895.41984732824426" y="-137.32394366197184"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="YLQ-Dz-s13">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="jOw-Qd-QWC" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="jmU-Ik-0Tp">
+                        <rect key="frame" x="0.0" y="59" width="393" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="P35-G2-wsA"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Svp-2w-vUe" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
             <point key="canvasLocation" x="-31.297709923664122" y="-137.32394366197184"/>
         </scene>
     </scenes>
     <color key="tintColor" name="Button Stack Background"/>
     <resources>
-        <image name="arrow.trianglehead.2.clockwise.rotate.90.camera" catalog="system" width="128" height="93"/>
         <namedColor name="Button Stack Background">
             <color red="0.5" green="0.5" blue="0.5" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
@@ -152,9 +132,6 @@
         </systemColor>
         <systemColor name="systemGreenColor">
             <color red="0.20392156859999999" green="0.78039215689999997" blue="0.34901960780000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
-        <systemColor name="tertiarySystemBackgroundColor">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
     </resources>
 </document>

@@ -149,6 +149,8 @@ struct WorkoutDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .fullScreenCover(isPresented: $showWorkoutScreen) {
             MainViewWrapper()
+            .ignoresSafeArea()// ✅ هنا يتم فتح شاشة MainViewController
+
         }
     }
 }
