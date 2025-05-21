@@ -11,15 +11,16 @@ struct OnboardingScreen1: View {
     var body: some View {
         VStack {
             Spacer()
-            Text("Welcome to").font(.title)
+            Text("Welcome to").font(.system(size: 40)).bold()
                 .padding(.top, -125)
-            Text("Motion").font(.title).bold().foregroundColor(.accent)
-                .padding(.top, -115)
+            Text("PosePal").font(.system(size: 45)).bold().foregroundColor(.accent)
+                .padding(.top, -105)
             Image("plank") // Replace with your image name
                 .resizable().scaledToFit().frame(height: 300)
                 .padding(.top, -25)
             Text("Move better\nTrain smarter")
                 .multilineTextAlignment(.center)
+                .font(.system(size: 33, weight: .light))
                 .padding()
             Spacer()
         }
@@ -32,12 +33,15 @@ struct OnboardingScreen2: View {
         VStack {
             Spacer()
             Image("squat") // Replace with your image
-                .resizable().scaledToFit().frame(height: 300)
-            Text("Real-Time Feedback")
-                .font(.title).bold().foregroundColor(.accent)
+                .resizable().scaledToFit().frame(height: 400)
+            Text("Real-Time\nFeedback")
+                .font(.system(size: 40)).bold().foregroundColor(.accent)
+                .offset(x: 2, y: -70)
             Text("Perfect your form instantly")
-                .multilineTextAlignment(.center)
-                .padding()
+                .offset(x: 2, y: -45)
+               .multilineTextAlignment(.center)
+                .font(.system(size: 27, weight: .light))
+              //  .padding()
             Spacer()
         }
         .padding()
@@ -51,10 +55,11 @@ struct OnboardingScreen3: View {
         VStack {
             Spacer()
             Image("strech") // Replace with your image
-                .resizable().scaledToFit().frame(height: 300)
-                .padding(.top, 60)
+                .resizable().scaledToFit().frame(height: 450)
+              //  .padding(.top, 30)
             Text("Choose Your Workout")
-                .font(.title).bold().foregroundColor(.accent)
+                .font(.system(size: 30)).bold().foregroundColor(.accent)
+                .offset(x: 2, y: -45)
             Spacer()
             Button(action: {
                 onFinish()
@@ -68,9 +73,12 @@ struct OnboardingScreen3: View {
                     .cornerRadius(10)
             }
             .padding(.horizontal)
-            .padding(.bottom, 80)
+            .padding(.bottom, 100)
         }
         .padding()
     }
 }
 
+#Preview {
+    OnboardingScreen2()
+}
